@@ -1,3 +1,6 @@
+''' tutorial from https://stormpath.com/blog/build-a-flask-app-in-30-minutes/
+by RANDALL DEGGES ''' 
+
 from datetime import datetime
 
 # flask imports
