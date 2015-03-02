@@ -1,17 +1,10 @@
 from app import db
-from sqlalchemy import (
-            Column, 
-            Integer, 
-            String, 
-            DateTime, 
-            ForeignKey)
-from sqlalchemy.orm import relationship
 
 class User(db.Model):
-    id = Column(Integer, primary_key=True)
-    name = Column(String(64), unique=True)
-    email = Column(String(120), unique=True)
-    posts = relationship('Post', backref='author', lazy='dynamic')
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    email = db.Column(db.String(120), unique=True)
+    posts = db.relationship('Post', backref='author', lazy='dynamic')
     
     def is_authenticated(self):
         return True
@@ -29,10 +22,10 @@ class User(db.Model):
         return '<User %r>' % (self.nickname)
     
 class Post(db.Model):
-    id = Column(Integer, primary_key=True)
-    body = Column(String(140))
-    timestamp= Column(DateTime)
-    user_id = Column(Integer, ForeignKey('user.id'))
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.String(140))
+    timestamp= db.Column(db.DateTime)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     
     def __repr__(self):
         return '<Post %r>' % (self.body)
