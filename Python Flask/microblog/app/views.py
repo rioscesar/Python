@@ -1,7 +1,8 @@
-from app import app
-from flask import flash, redirect
-from flask.templating import render_template
+from flask import render_template, flash, redirect, session, url_for, request, g
+from flask_login import login_user, logout_user, current_user, login_required
+from app import app, db, lm, oid
 from .forms import LoginForm
+from .models import User
 
 @app.route('/')
 @app.route('/index')
@@ -36,3 +37,7 @@ def login():
                            form=form,
                            # scans the list to check if you have used an openid provider
                            providers=app.config['OPENID_PROVIDERS'])
+
+@lm.user_loader
+def load_user(id):
+    return User.query.get(int(id))
