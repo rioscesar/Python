@@ -6,8 +6,9 @@ from .models import User
 
 @app.route('/')
 @app.route('/index')
+@login_required
 def index():
-    user = {'nickname': 'Miguel'}  # fake user
+    user = g.user
     posts = [  # fake array of posts
         { 
             'author': {'nickname': 'John'}, 
@@ -39,6 +40,11 @@ def login():
                            form=form,
                            providers=app.config['OPENID_PROVIDERS'])
 
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
 @lm.user_loader
 def load_user(id):
     return User.query.get(int(id))
@@ -53,7 +59,7 @@ def after_login(resp):
         nickname = resp.nickname
         if nickname is None or nickname == "":
             nickname = resp.email.split('@')[0]
-        user = User(nickname=nickname, email=resp.email)
+        user = User(name=nickname, email=resp.email)
         db.session.add(user)
         db.session.commit()
     remember_me = False
@@ -63,6 +69,24 @@ def after_login(resp):
     login_user(user, remember=remember_me)
     return redirect(request.args.get('next') or url_for('index'))
 
+@app.before_request
+def before_request():
+    g.user = current_user
+
+@app.route('/user/<nickname>')
+@login_required
+def user(nickname):
+    user = User.query.filter_by(name=nickname).first()
+    if user == None:
+        flash('User %s not found.' % nickname)
+        return redirect(url_for('index'))
+    posts = [
+        {'author': user, 'body': 'Test post #1'},
+        {'author': user, 'body': 'Test post #2'}
+    ]
+    return render_template('user.html',
+                           user=user,
+                           posts=posts)
 
 
 
