@@ -8,3 +8,5 @@ class Choice(models.Model):
     question = models.ForeignKey(Question)
     choice_text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
+
+    #this is a test to see if git is actually integrated
