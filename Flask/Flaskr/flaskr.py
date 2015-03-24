@@ -22,7 +22,7 @@ from flask_stormpath import (
     login_user,
     logout_user,
     user,
-    )
+                            )
 
 # set the app configurations
 app = Flask(__name__)
