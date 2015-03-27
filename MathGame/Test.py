@@ -1,11 +1,45 @@
 import sys
 from PySide import QtGui
 
-app = QtGui.QApplication(sys.argv)
+class Example(QtGui.QMainWindow):
 
-wid = QtGui.QWidget()
-wid.resize(250, 150)
-wid.setWindowTitle('Simple')
-wid.show()
+    def __init__(self):
+        super(Example, self).__init__()
 
-sys.exit(app.exec_())
+        self.initUI()
+
+    def initUI(self):
+
+        self.statusBar().showMessage('Kill everybody')
+
+        textEdit = QtGui.QTextEdit()
+        self.setCentralWidget(textEdit)
+
+        exitAction = QtGui.QAction(QtGui.QIcon('web.jpg'), 'Exit', self)
+        exitAction.setShortcut('Ctrl+Q')
+        exitAction.setStatusTip('Exit application')
+        exitAction.triggered.connect(self.close)
+
+        self.statusBar()
+
+        menubar = self.menuBar()
+        fileMenu = menubar.addMenu('File')
+        fileMenu.addAction(exitAction)
+
+        self.toolbar = self.addToolBar('Exit')
+        self.toolbar.addAction(exitAction)
+
+        self.setGeometry(300, 300, 250, 150)
+        self.setWindowTitle('Menubar')
+        self.show()
+
+
+def main():
+
+    app = QtGui.QApplication(sys.argv)
+    ex = Example()
+    sys.exit(app.exec_())
+
+
+if __name__ == '__main__':
+    main()
