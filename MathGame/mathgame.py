@@ -1,46 +1,43 @@
 import sys
-from PySide import QtGui, QtCore
-
+from PySide import QtGui
 
 class Example(QtGui.QWidget):
+    
     def __init__(self):
         super(Example, self).__init__()
+        
         self.initUI()
-
+        
     def initUI(self):
-        QtGui.QToolTip.setFont(QtGui.QFont('SansSerif', 10))
-        self.setToolTip('This is a <b>QWidget</b> widget')
+        
+        title = QtGui.QLabel('Title')
+        author = QtGui.QLabel('Author')
+        review = QtGui.QLabel('Review')
 
-        btn = QtGui.QPushButton('Quit', self)
-        btn.clicked.connect(QtCore.QCoreApplication.instance().quit)
-        btn.setToolTip('This is a <b>QPushButton</b> widget')
-        btn.resize(btn.sizeHint())
-        btn.move(50, 50)
+        titleEdit = QtGui.QLineEdit()
+        authorEdit = QtGui.QLineEdit()
+        reviewEdit = QtGui.QTextEdit()
 
-        self.setWindowIcon(QtGui.QIcon('web.jpg'))
+        grid = QtGui.QGridLayout()
+        grid.setSpacing(10)
 
-        self.resize(250, 150)
-        self.center()
-        self.setWindowTitle('Test')
+        grid.addWidget(title, 1, 0)
+        grid.addWidget(titleEdit, 1, 1)
+
+        grid.addWidget(author, 2, 0)
+        grid.addWidget(authorEdit, 2, 1)
+
+        grid.addWidget(review, 3, 0)
+        grid.addWidget(reviewEdit, 3, 1, 5, 1)
+        
+        self.setLayout(grid) 
+        
+        self.setGeometry(300, 300, 350, 300)
+        self.setWindowTitle('Review')    
         self.show()
-
-    def closeEvent(self, event):
-        reply = QtGui.QMessageBox.question(self, 'Message', "Are you sure to quit?", QtGui.QMessageBox.Yes |
-                                           QtGui.QMessageBox.No, QtGui.QMessageBox.No)
-        if reply == QtGui.QMessageBox.Yes:
-            event.accept()
-        else:
-            event.ignore()
-
-    def center(self):
-        qr = self.frameGeometry()
-        cp = QtGui.QDesktopWidget().availableGeometry().center()
-        qr.moveCenter(cp)
-        self.move(qr.topLeft())
-
-
-
+        
 def main():
+    
     app = QtGui.QApplication(sys.argv)
     ex = Example()
     sys.exit(app.exec_())
