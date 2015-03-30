@@ -17,26 +17,16 @@ class MathGame(QtGui.QMainWindow):
         widget = QtGui.QWidget()
         self.setCentralWidget(widget)
 
-        topFiller = QtGui.QWidget()
-        topFiller.setSizePolicy(QtGui.QSizePolicy.Expanding,
-                            QtGui.QSizePolicy.Expanding)
-
-        bottomFiller = QtGui.QWidget()
-        bottomFiller.setSizePolicy(QtGui.QSizePolicy.Expanding,
-                                   QtGui.QSizePolicy.Expanding)
-
-        self.layout = QtGui.QHBoxLayout()
+        self.layout = QtGui.QGridLayout()
         self.layout.setContentsMargins(5, 5, 5, 5)
-        self.layout.addWidget(topFiller)
 
         self.createAction()
         self.dif_and_operation()
 
         self.lets_play()
 
-        self.layout.addWidget(self.dif)
-        self.layout.addWidget(self.op)
-        self.layout.addWidget(bottomFiller)
+        self.layout.addWidget(self.dif, 1, 2)
+        self.layout.addWidget(self.op, 1, 5)
         widget.setLayout(self.layout)
 
         self.statusBar()
@@ -138,10 +128,13 @@ class MathGame(QtGui.QMainWindow):
 
     def delete(self):
         if self.delete_op and self.delete_op:
-            d = self.layout.takeAt(1)
-            d.widget().deleteLater()
-            o = self.layout.takeAt(1)
-            o.widget().deleteLater()
+            self.layout.removeWidget(self.op)
+            self.op.deleteLater()
+            del self.op
+
+            self.layout.removeWidget(self.dif)
+            self.dif.deleteLater()
+            del self.dif
 
     # timer should go here that times the user until the time runs out.
     # A tally of the number he got right should appear at the end
@@ -153,9 +146,9 @@ class MathGame(QtGui.QMainWindow):
             self.input = QtGui.QLineEdit()
             self.submit = QtGui.QPushButton("SUBMIT")
 
-            self.layout.addWidget(self.equation, 4, 8)
-            self.layout.addWidget(self.input, 8)
-            self.layout.addWidget(self.submit)
+            self.layout.addWidget(self.equation, 1, 2)
+            self.layout.addWidget(self.input, 1, 5)
+            self.layout.addWidget(self.submit, 1, 8)
 
             self.input.textChanged.connect(self.set_answer)
             self.submit.clicked.connect(self.check)
@@ -166,10 +159,13 @@ class MathGame(QtGui.QMainWindow):
         print(self.answer)
 
     def check(self):
+        response = QtGui.QLabel()
         if self.question.check_answer(self.answer):
-            print("CORRECT!")
+            response.setText("CORRECT!")
+            self.layout.addWidget(response)
         else:
-            print("TRY AGAIN!")
+            response.setText("TRY AGAIN!")
+            self.layout.addWidget(response)
 
 
 
