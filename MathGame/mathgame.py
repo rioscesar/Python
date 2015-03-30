@@ -6,20 +6,42 @@ from PySide import QtGui
 class MathGame(QtGui.QMainWindow):
     def __init__(self):
         super(MathGame, self).__init__()
+        self.delete_diff = False
+        self.delete_op = False
         self.initUI()
 
     def initUI(self):
         # show the difficulty option along with the operations option
         # get the response and create problem
 
+        widget = QtGui.QWidget()
+        self.setCentralWidget(widget)
+
+        topFiller = QtGui.QWidget()
+        topFiller.setSizePolicy(QtGui.QSizePolicy.Expanding,
+                            QtGui.QSizePolicy.Expanding)
+
+        bottomFiller = QtGui.QWidget()
+        bottomFiller.setSizePolicy(QtGui.QSizePolicy.Expanding,
+                                   QtGui.QSizePolicy.Expanding)
+
+        self.hbox = QtGui.QHBoxLayout()
+        self.hbox.setContentsMargins(5, 5, 5, 5)
+        self.hbox.addWidget(topFiller)
+
         self.createAction()
         self.dif_and_operation()
 
+        self.hbox.addWidget(self.dif)
+        self.hbox.addWidget(self.op)
+        self.hbox.addWidget(bottomFiller)
+        widget.setLayout(self.hbox)
+
         self.statusBar()
 
-        self.setGeometry(300, 300, 250, 150)
         self.setWindowTitle('Math Game')
-        self.show()
+        self.setMinimumSize(160, 160)
+        self.resize(300, 200)
 
     # this method takes care of the input of the user
     def dif_and_operation(self):
@@ -34,24 +56,38 @@ class MathGame(QtGui.QMainWindow):
 
     def easy(self):
         self.difficulty = "EASY"
+        self.delete_diff = True
+        self.delete()
 
     def intermediate(self):
         self.difficulty = "INTERMEDIATE"
+        self.delete_diff = True
+        self.delete()
 
     def extreme(self):
         self.difficulty = "EXTREME"
+        self.delete_diff = True
+        self.delete()
 
     def add(self):
         self.operation = "ADDITION"
+        self.delete_op = True
+        self.delete()
 
     def sub(self):
         self.operation = "SUBTRACTION"
+        self.delete_op = True
+        self.delete()
 
     def mult(self):
         self.operation = "MULTIPLICATION"
+        self.delete_op = True
+        self.delete()
 
     def div(self):
         self.operation = "DIVISION"
+        self.delete_op = True
+        self.delete()
 
     def createAction(self):
         self.EASY = QtGui.QAction("EASY", self, statusTip="Set the difficulty to EASY",
@@ -90,6 +126,14 @@ class MathGame(QtGui.QMainWindow):
             self.statusBar().showMessage("Operation being selected")
         else:
             self.statusBar().showMessage("Ready")
+
+    def delete(self):
+        if self.delete_op and self.delete_op:
+            d = self.hbox.takeAt(1)
+            d.widget().deleteLater()
+            o = self.hbox.takeAt(1)
+            o.widget().deleteLater()
+
 
 
 class Difficulty():
@@ -133,6 +177,7 @@ class Difficulty():
 def main():
     app = QtGui.QApplication(sys.argv)
     ex = MathGame()
+    ex.show()
     sys.exit(app.exec_())
 
 
