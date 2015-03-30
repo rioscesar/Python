@@ -12,6 +12,7 @@ class MathGame(QtGui.QMainWindow):
         # show the difficulty option along with the operations option
         # get the response and create problem
 
+        self.createAction()
         self.dif_and_operation()
 
         self.statusBar()
@@ -31,23 +32,61 @@ class MathGame(QtGui.QMainWindow):
         self.dif.clicked.connect(self.buttonClicked)
         self.op.clicked.connect(self.buttonClicked)
 
-    def createAction(self):
-        pass
+    def easy(self):
+        self.difficulty = "EASY"
 
+    def intermediate(self):
+        self.difficulty = "INTERMEDIATE"
+
+    def extreme(self):
+        self.difficulty = "EXTREME"
+
+    def add(self):
+        self.operation = "ADDITION"
+
+    def sub(self):
+        self.operation = "SUBTRACTION"
+
+    def mult(self):
+        self.operation = "MULTIPLICATION"
+
+    def div(self):
+        self.operation = "DIVISION"
+
+    def createAction(self):
+        self.EASY = QtGui.QAction("EASY", self, statusTip="Set the difficulty to EASY",
+                                  triggered=self.easy)
+        self.INTERMEDIATE = QtGui.QAction("INTERMEDIATE", self, statusTip="Set the difficulty to INTERMEDIATE",
+                                          triggered=self.intermediate)
+        self.EXTREME = QtGui.QAction("EXTREME", self, statusTip="Set the difficulty to EXTREME",
+                                     triggered=self.extreme)
+        self.ADDITION = QtGui.QAction("ADDITION", self, statusTip="Operation will be ADDITION",
+                                      triggered=self.add)
+        self.SUBTRACTION = QtGui.QAction("SUBTRACTION", self, statusTip="Operation will be SUBTRACTION",
+                                         triggered=self.sub)
+        self.MULTIPLICATION = QtGui.QAction("MULTIPLICATION", self, statusTip="Operation will be MULTIPLICATION",
+                                            triggered=self.mult)
+        self.DIVISION = QtGui.QAction("DIVISION", self, statusTip="Operation will be DIVISION",
+                                      triggered=self.div)
 
     def buttonClicked(self):
         sender = self.sender()
-        dmenu = ["EASY", "INTERMEDIATE", "EXTREME"]
-        omenu = ["ADDITION", "SUBTRACTION", "MULTIPLICATION", "DIVISION"]
+        dmenu = [self.EASY, self.INTERMEDIATE, self.EXTREME]
+        omenu = [self.ADDITION, self.SUBTRACTION, self.MULTIPLICATION, self.DIVISION]
 
-        difmenu = QtGui.QMenu()
-        opmenu = QtGui.QMenu()
+        self.difmenu = QtGui.QMenu()
+        for action in dmenu:
+            self.difmenu.addAction(action)
 
-
+        self.opmenu = QtGui.QMenu()
+        for action in omenu:
+            self.opmenu.addAction(action)
 
         if sender.text() == 'Difficulty':
+            self.dif.setMenu(self.difmenu)
             self.statusBar().showMessage("Difficulty being selected")
         elif sender.text() == 'Operations':
+            self.op.setMenu(self.opmenu)
             self.statusBar().showMessage("Operation being selected")
         else:
             self.statusBar().showMessage("Ready")
