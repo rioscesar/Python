@@ -25,17 +25,19 @@ class MathGame(QtGui.QMainWindow):
         bottomFiller.setSizePolicy(QtGui.QSizePolicy.Expanding,
                                    QtGui.QSizePolicy.Expanding)
 
-        self.hbox = QtGui.QHBoxLayout()
-        self.hbox.setContentsMargins(5, 5, 5, 5)
-        self.hbox.addWidget(topFiller)
+        self.layout = QtGui.QHBoxLayout()
+        self.layout.setContentsMargins(5, 5, 5, 5)
+        self.layout.addWidget(topFiller)
 
         self.createAction()
         self.dif_and_operation()
 
-        self.hbox.addWidget(self.dif)
-        self.hbox.addWidget(self.op)
-        self.hbox.addWidget(bottomFiller)
-        widget.setLayout(self.hbox)
+        self.lets_play()
+
+        self.layout.addWidget(self.dif)
+        self.layout.addWidget(self.op)
+        self.layout.addWidget(bottomFiller)
+        widget.setLayout(self.layout)
 
         self.statusBar()
 
@@ -58,36 +60,43 @@ class MathGame(QtGui.QMainWindow):
         self.difficulty = "EASY"
         self.delete_diff = True
         self.delete()
+        self.lets_play()
 
     def intermediate(self):
         self.difficulty = "INTERMEDIATE"
         self.delete_diff = True
         self.delete()
+        self.lets_play()
 
     def extreme(self):
         self.difficulty = "EXTREME"
         self.delete_diff = True
         self.delete()
+        self.lets_play()
 
     def add(self):
         self.operation = "ADDITION"
         self.delete_op = True
         self.delete()
+        self.lets_play()
 
     def sub(self):
         self.operation = "SUBTRACTION"
         self.delete_op = True
         self.delete()
+        self.lets_play()
 
     def mult(self):
         self.operation = "MULTIPLICATION"
         self.delete_op = True
         self.delete()
+        self.lets_play()
 
     def div(self):
         self.operation = "DIVISION"
         self.delete_op = True
         self.delete()
+        self.lets_play()
 
     def createAction(self):
         self.EASY = QtGui.QAction("EASY", self, statusTip="Set the difficulty to EASY",
@@ -129,10 +138,38 @@ class MathGame(QtGui.QMainWindow):
 
     def delete(self):
         if self.delete_op and self.delete_op:
-            d = self.hbox.takeAt(1)
+            d = self.layout.takeAt(1)
             d.widget().deleteLater()
-            o = self.hbox.takeAt(1)
+            o = self.layout.takeAt(1)
             o.widget().deleteLater()
+
+    # timer should go here that times the user until the time runs out.
+    # A tally of the number he got right should appear at the end
+    def lets_play(self):
+        if self.delete_op and self.delete_diff:
+            self.answer = ""
+            self.question = Difficulty(self.difficulty, self.operation)
+            self.equation = QtGui.QLabel(self.question.equation_difficulty())
+            self.input = QtGui.QLineEdit()
+            self.submit = QtGui.QPushButton("SUBMIT")
+
+            self.layout.addWidget(self.equation, 4, 8)
+            self.layout.addWidget(self.input, 8)
+            self.layout.addWidget(self.submit)
+
+            self.input.textChanged.connect(self.set_answer)
+            self.submit.clicked.connect(self.check)
+
+
+    def set_answer(self, text):
+        self.answer = text
+        print(self.answer)
+
+    def check(self):
+        if self.question.check_answer(self.answer):
+            print("CORRECT!")
+        else:
+            print("TRY AGAIN!")
 
 
 
@@ -152,24 +189,27 @@ class Difficulty():
             return self.create_equation(20, 30)
 
     def create_equation(self, a, b):
-        a = str(a)
-        b = str(b)
+        a = random.randint(a, b)
+        b = random.randint(a, b)
+
+        _a = str(a)
+        _b = str(b)
 
         if self.op == "ADDITION":
             self.__answer = a + b
-            return a + " + " + b
+            return _a + " + " + _b
         elif self.op == "SUBTRACTION":
             self.__answer = a - b
-            return a + " - " + b
+            return _a + " - " + _b
         elif self.op == "MULTIPLICATION":
             self.__answer = a * b
-            return a + " * " + b
+            return _a + " * " + _b
         else:
             self.__answer = a / b
-            return a + " / " + b
+            return _a + " / " + _b
 
     def check_answer(self, uanswer):
-        if uanswer == self.__answer:
+        if str(uanswer) == str(self.__answer):
             return True
         return False
 
