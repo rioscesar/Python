@@ -27,7 +27,6 @@ class Example(QtGui.QWidget):
         self.show()
 
     def showDialog(self):
-
         col = QtGui.QColorDialog.getColor()
 
         if col.isValid():

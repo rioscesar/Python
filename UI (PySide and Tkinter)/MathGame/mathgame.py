@@ -146,7 +146,7 @@ class MathGame(QtGui.QMainWindow):
             self.input = QtGui.QLineEdit()
             self.submit = QtGui.QPushButton("SUBMIT")
 
-            self.layout.addWidget(self.equation, 1, 2)
+            self.layout.addWidget(self.equation, 1, 1)
             self.layout.addWidget(self.input, 1, 5)
             self.layout.addWidget(self.submit, 1, 8)
 
